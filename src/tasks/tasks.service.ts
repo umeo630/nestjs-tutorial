@@ -14,4 +14,12 @@ export class TasksService {
   create(dto: CreateTaskDto): Promise<Task> {
     return this.taskRepository.save(dto);
   }
+
+  findAll(): Promise<Task[]> {
+    return this.taskRepository.find();
+  }
+
+  findOne(id: string): Promise<Task> {
+    return this.taskRepository.findOne({ where: { id: Number(id) } });
+  }
 }
