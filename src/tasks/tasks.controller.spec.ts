@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
-import { createTaskDto, oneTask } from '../../test/tasks/mocks';
+import { createTaskDto, oneTask, tasks } from '../../test/tasks/mocks';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -16,6 +16,8 @@ describe('TasksController', () => {
           provide: TasksService,
           useValue: {
             create: jest.fn().mockResolvedValue(oneTask),
+            findAll: jest.fn().mockResolvedValue(tasks),
+            findOne: jest.fn().mockResolvedValue(oneTask),
           },
         },
       ],
@@ -34,6 +36,22 @@ describe('TasksController', () => {
       const serviceCreateSpy = jest.spyOn(service, 'create');
       expect(controller.create(createTaskDto)).resolves.toEqual(oneTask);
       expect(serviceCreateSpy).toHaveBeenCalledWith(createTaskDto);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return an array of tasks', () => {
+      const serviceFindSpy = jest.spyOn(service, 'findAll');
+      expect(controller.findAll()).resolves.toEqual(tasks);
+      expect(serviceFindSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a task', () => {
+      const serviceFindOneSpy = jest.spyOn(service, 'findOne');
+      expect(controller.findOne('1')).resolves.toEqual(oneTask);
+      expect(serviceFindOneSpy).toHaveBeenCalledWith('1');
     });
   });
 });
