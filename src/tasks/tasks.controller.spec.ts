@@ -1,7 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
-import { createTaskDto, oneTask, tasks } from '../../test/tasks/mocks';
+import {
+  createTaskDto,
+  deleteResult,
+  oneTask,
+  tasks,
+  updateTaskDto,
+  updatedTask,
+} from '../../test/tasks/mocks';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -18,6 +25,8 @@ describe('TasksController', () => {
             create: jest.fn().mockResolvedValue(oneTask),
             findAll: jest.fn().mockResolvedValue(tasks),
             findOne: jest.fn().mockResolvedValue(oneTask),
+            update: jest.fn().mockResolvedValue(updatedTask),
+            delete: jest.fn().mockResolvedValue(deleteResult),
           },
         },
       ],
@@ -52,6 +61,24 @@ describe('TasksController', () => {
       const serviceFindOneSpy = jest.spyOn(service, 'findOne');
       expect(controller.findOne('1')).resolves.toEqual(oneTask);
       expect(serviceFindOneSpy).toHaveBeenCalledWith('1');
+    });
+  });
+
+  describe('update', () => {
+    it('should update a task', () => {
+      const serviceUpdateSpy = jest.spyOn(service, 'update');
+      expect(controller.update('1', updateTaskDto)).resolves.toEqual(
+        updatedTask,
+      );
+      expect(serviceUpdateSpy).toHaveBeenCalledWith('1', updateTaskDto);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a task', () => {
+      const serviceDeleteSpy = jest.spyOn(service, 'delete');
+      expect(controller.delete('1')).resolves.toEqual(deleteResult);
+      expect(serviceDeleteSpy).toHaveBeenCalledWith('1');
     });
   });
 });

@@ -3,7 +3,14 @@ import { TasksService } from './tasks.service';
 import { Task } from './task.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { oneTask, createTaskDto, tasks } from '../../test/tasks/mocks';
+import {
+  oneTask,
+  createTaskDto,
+  tasks,
+  updateTaskDto,
+  updatedTask,
+  deleteResult,
+} from '../../test/tasks/mocks';
 
 describe('TasksService', () => {
   let service: TasksService;
@@ -19,6 +26,7 @@ describe('TasksService', () => {
             save: jest.fn().mockResolvedValue(oneTask),
             find: jest.fn().mockResolvedValue(tasks),
             findOne: jest.fn().mockResolvedValue(oneTask),
+            delete: jest.fn().mockResolvedValue(deleteResult),
           },
         },
       ],
@@ -53,6 +61,20 @@ describe('TasksService', () => {
       const repositoryFindOneSpy = jest.spyOn(repository, 'findOne');
       expect(service.findOne('1')).resolves.toEqual(oneTask);
       expect(repositoryFindOneSpy).toHaveBeenCalledWith({ where: { id: 1 } });
+    });
+  });
+
+  describe('update', () => {
+    it('should update a task', async () => {
+      expect(service.update('1', updateTaskDto)).resolves.toEqual(updatedTask);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a task', () => {
+      const repositoryDeleteSpy = jest.spyOn(repository, 'delete');
+      expect(service.delete('1')).resolves.toEqual(deleteResult);
+      expect(repositoryDeleteSpy).toHaveBeenCalledWith({ id: 1 });
     });
   });
 });
