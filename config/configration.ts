@@ -11,4 +11,11 @@ export default () => ({
     pass: process.env.DB_PASSWORD || 'password',
     name: process.env.DB_NAME || 'nest-dev',
   },
+  databaseTest: {
+    host: process.env.DB_TEST_HOST || 'localhost',
+    port: parseInt(process.env.DB_TEST_PORT) || 5431,
+    user: process.env.DB_TEST_USERNAME || 'root',
+    pass: process.env.DB_TEST_PASSWORD || 'password',
+    name: process.env.DB_TEST_NAME || 'nest-test',
+  },
 });
